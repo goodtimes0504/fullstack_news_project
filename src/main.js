@@ -5,5 +5,18 @@ import router from "./router";
 import pinia from "./store";
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
+//粒子效果
+import Particles from "@tsparticles/vue3";
+// import { loadSlim } from "tsparticles-slim";
+import { loadFull } from "tsparticles"
 
-createApp(App).use(pinia).use(router).use(ElementPlus).mount("#app");
+createApp(App)
+    .use(pinia)
+    .use(router)
+    .use(ElementPlus)
+    .use(Particles, {
+        init: async engine => {
+            await loadFull(engine)
+        },
+    })
+    .mount("#app");

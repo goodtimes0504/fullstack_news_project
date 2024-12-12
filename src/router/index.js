@@ -4,6 +4,8 @@ import MainBox from "@/views/MainBox.vue";
 import routesConfig from "./config";
 import { useUserStore } from "@/store/user";
 
+// 创建路由之前，先检查是否需要添加动态路由
+const token = localStorage.getItem("token");
 const routes = [
   {
     path: "/login",
@@ -14,9 +16,9 @@ const routes = [
     path: "/mainbox",
     name: "mainbox",
     component: MainBox,
-    // mainbox的嵌套路由 后面会根据权限来动态添加
+    redirect: "/index",
+    children: token ? routesConfig : [], // 如果有 token，直接添加动态路由
   },
-
 ];
 
 const router = createRouter({
@@ -24,8 +26,7 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  const userStore = useUserStore();
+router.beforeEach(async (to, from, next) => {
   if (to.name === "login") {
     next();
   } else {
@@ -34,21 +35,9 @@ router.beforeEach((to, from, next) => {
         path: "/login",
       });
     } else {
-      if (!userStore.isGetterRouter) {
-        configRouter(userStore);
-        next({ path: to.fullPath });
-      } else {
-        next();
-      }
+      next();
     }
   }
 });
-const configRouter = (userStore) => {
-  routesConfig.forEach((item) => {
-    router.addRoute("mainbox", item);
-  });
-
-  userStore.changeGetterRouter(true);
-};
 
 export default router;
