@@ -24,7 +24,9 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="submitForm"> 登录 </el-button>
+          <el-button :loading="loading" type="primary" @click="submitForm">
+            登录
+          </el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -33,8 +35,17 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import 'element-plus/es/components/message/style/css'
+// import axios from 'axios'
+import { loginApi } from '@/api/userApi'
+import { useUserStore } from '@/store/user'
+const userStore = useUserStore()
+const loading = ref(false)
 const router = useRouter()
+const route = useRoute()
+
 //登录表单绑定的响应式数据
 const loginForm = ref({
   username: '',
@@ -44,7 +55,7 @@ const loginForm = ref({
 const loginRules = ref({
   username: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
-    { min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur' },
+    { min: 3, max: 12, message: '长度在 3 到 12 个字符', trigger: 'blur' },
   ],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' },
@@ -56,26 +67,48 @@ const loginFormRef = ref(null)
 
 //登录方法
 const submitForm = () => {
-  // 因为上面是失去焦点之后才会验证，但是啥都不输入 直接点提交也可以提交 所以这里还需要手动验证
   loginFormRef.value.validate(valid => {
     if (valid) {
       handleLogin()
-      loginFormRef.value.resetFields()
-      router.push('/index')
     } else {
-      //弹窗提醒
-      // ElMessage({
-      //   message: '请输入正确的用户名和密码',
-      //   type: 'error',
-      // })
       return
     }
   })
 }
 
 //模拟token
-const handleLogin = () => {
-  localStorage.setItem('token', '123')
+const handleLogin = async () => {
+  // const result = await axios.post('/adminapi/user/login', loginForm.value)
+  const result = await loginApi(loginForm.value)
+  console.log(result) //result.data.code 或者 result.data.msg
+  if (result.data.code === '1') {
+    userStore.changeUserInfo(result.data.data) //将用户信息存储到store中
+    loginFormRef.value.resetFields()
+    // localStorage.setItem('token', '123')
+    // 获取重定向地址，如果没有则默认跳转到 mainbox
+    const redirect = route.query.redirect || '/mainbox'
+
+    ElMessage({
+      message: '登录成功',
+      type: 'success',
+    })
+    loading.value = true
+    // setTimeout(() => {
+    //   router.push(redirect)
+    // }, 1000)
+    try {
+      router.push(redirect).catch(err => {
+        console.error('路由跳转错误：', err)
+      })
+    } finally {
+      loading.value = false
+    }
+  } else {
+    return ElMessage({
+      message: result.data.msg,
+      type: 'error',
+    })
+  }
 }
 //配置tsparticles/vue3粒子背景
 const options = {

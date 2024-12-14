@@ -8,9 +8,11 @@
   },
   "dependencies": {
     "@tsparticles/vue3": "^3.0.1",
+    "axios": "^1.7.9",
     "core-js": "^3.8.3",
     "element-plus": "^2.9.0",
     "pinia": "^2.3.0",
+    "pinia-plugin-persist": "^1.0.0",
     "tsparticles": "^3.7.1",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",

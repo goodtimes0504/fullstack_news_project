@@ -4,9 +4,12 @@ import MainBox from "@/views/MainBox.vue";
 import routesConfig from "./config";
 import { useUserStore } from "@/store/user";
 
-// 创建路由之前，先检查是否需要添加动态路由
-const token = localStorage.getItem("token");
+// 基础路由配置，包含所有路由
 const routes = [
+  {
+    path: "/",
+    redirect: "/mainbox",
+  },
   {
     path: "/login",
     name: "login",
@@ -17,7 +20,7 @@ const routes = [
     name: "mainbox",
     component: MainBox,
     redirect: "/index",
-    children: token ? routesConfig : [], // 如果有 token，直接添加动态路由
+    children: routesConfig, // 直接添加所有子路由
   },
 ];
 
@@ -26,15 +29,24 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to, from, next) => {
-  if (to.name === "login") {
+// 路由守卫只负责权限控制
+router.beforeEach((to, from, next) => {
+  // 白名单路径，不需要登录就可以访问
+  const whiteList = ["/login"];
+
+  if (whiteList.includes(to.path)) {
     next();
   } else {
-    if (!localStorage.getItem("token")) {
+    // 检查是否有 token
+    const token = localStorage.getItem("token");
+    if (!token) {
+      // 没有 token，重定向到登录页
       next({
         path: "/login",
+        query: { redirect: to.fullPath }, // 保存原目标路径
       });
     } else {
+      // 有 token，允许访问
       next();
     }
   }
