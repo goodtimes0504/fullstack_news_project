@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "@tsparticles/vue3": "^3.0.1",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^5.1.12",
     "axios": "^1.7.9",
     "core-js": "^3.8.3",
     "element-plus": "^2.9.0",
@@ -16,7 +18,8 @@
     "tsparticles": "^3.7.1",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
-    "vuex": "^4.0.0"
+    "vuex": "^4.0.0",
+    "wangeditor": "^4.7.15"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",

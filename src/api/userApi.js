@@ -11,6 +11,26 @@ export const uploadUserInfoApi = (data) => {
         }
     })
 }
+//添加用户接口
+export const addUserApi = (data) => {
+    return axiosInstance.post('/adminapi/user/add', data, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+}
+//获取用户列表接口
+export const getUserListApi = () => {
+    return axiosInstance.get('/adminapi/user/list')
+}
+//删除用户接口
+export const deleteUserApi = (id) => {
+    return axiosInstance.delete(`/adminapi/user/delete/${id}`)
+}
+//修改用户接口
+export const updateUserApi = (data) => {
+    return axiosInstance.put(`/adminapi/user/update/${data._id}`, data)
+}
 
 
 

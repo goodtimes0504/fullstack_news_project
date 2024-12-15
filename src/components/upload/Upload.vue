@@ -12,31 +12,31 @@
 </template>
 
 <script setup>
-import { defineEmits, defineProps, computed } from "vue";
-import { Plus } from "@element-plus/icons-vue";
+import { computed } from 'vue'
+import { Plus } from '@element-plus/icons-vue'
 
 //从父组件获取avatar的值
 const props = defineProps({
   avatar: {
     type: String,
-    default: "",
+    default: '',
   },
-});
-const emits = defineEmits(["update:avatar"]);
+})
+const emits = defineEmits(['update:avatar'])
 const uploadAvatarUrl = computed(() => {
-  if (props.avatar.includes("blob:")) {
-    return props.avatar;
+  if (props.avatar.includes('blob:')) {
+    return props.avatar
   } else {
-    return "http://localhost:3000" + props.avatar;
+    return 'http://localhost:3000' + props.avatar
   }
-});
+})
 //每次选择完头像的回调函数
-const handleAvatarChange = (file) => {
+const handleAvatarChange = file => {
   // console.log(file)
   if (file && file.raw) {
-    emits("update:avatar", file.raw);
+    emits('update:avatar', file.raw)
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -41,6 +41,7 @@
 import { useUserStore } from '@/store/user'
 import { useRouter } from 'vue-router'
 import { Menu, User } from '@element-plus/icons-vue'
+import { resetRouter } from '@/router'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -56,6 +57,8 @@ const handleCommand = command => {
     localStorage.removeItem('token')
     // localStorage.removeItem('userInfo')// 清除用户信息 上下这俩都可以
     userStore.clearUserInfo()
+    //重置无权限的普通常量路由表
+    resetRouter()
     router.push('/login')
   }
 }

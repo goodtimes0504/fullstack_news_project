@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vue-particles id="tsparticles" :options="options" />
+    <vue-particles id="tsparticles" :options="configs" />
     <div class="formContainer">
       <h3>企业门户网站管理系统</h3>
       <el-form
@@ -41,6 +41,9 @@ import 'element-plus/es/components/message/style/css'
 // import axios from 'axios'
 import { loginApi } from '@/api/userApi'
 import { useUserStore } from '@/store/user'
+// import { authRoutes } from '@/router/config.js'
+import { addAuthRoutes } from '@/router/index.js'
+
 const userStore = useUserStore()
 const loading = ref(false)
 const router = useRouter()
@@ -93,6 +96,19 @@ const handleLogin = async () => {
       type: 'success',
     })
     loading.value = true
+    // console.log(result.data.data.role, typeof result.data.data.role)
+    if (result.data.data.role === 1) {
+      addAuthRoutes()
+      console.log(
+        result.data.data.role,
+        typeof result.data.data.role,
+        '添加成功',
+        router.getRoutes()
+      )
+      // await removeAuthRoutes() //移除不需要的路由
+      // console.log('移除不需要的路由 ')
+      // // await addAuthRoutes() //添加需要的路由
+    }
     // setTimeout(() => {
     //   router.push(redirect)
     // }, 1000)
@@ -110,77 +126,223 @@ const handleLogin = async () => {
     })
   }
 }
+// const removeAuthRoutes = () => {
+//   // 找出需要删除的路由
+//   routesConfig.forEach(route => {
+//     if (route.requireAuth) {
+//       // 删除该路由
+//       router.removeRoute(route.name)
+//     }
+//   })
+// }
 //配置tsparticles/vue3粒子背景
-const options = {
-  background: {
-    color: {
-      value: '#2d3a4b',
-    },
-  },
-  fpsLimit: 120,
-  interactivity: {
-    events: {
-      onClick: {
-        enable: true,
-        mode: 'push',
-      },
-      onHover: {
-        enable: true,
-        mode: 'repulse',
-      },
-    },
-    modes: {
-      bubble: {
-        distance: 400,
-        duration: 2,
-        opacity: 0.8,
-        size: 40,
-      },
-      push: {
-        quantity: 4,
-      },
-      repulse: {
-        distance: 200,
-        duration: 0.4,
-      },
-    },
-  },
+// const options = {
+//   background: {
+//     color: {
+//       value: '#2d3a4b',
+//     },
+//   },
+//   fpsLimit: 120,
+//   interactivity: {
+//     events: {
+//       onClick: {
+//         enable: true,
+//         mode: 'push',
+//       },
+//       onHover: {
+//         enable: true,
+//         mode: 'repulse',
+//       },
+//     },
+//     modes: {
+//       bubble: {
+//         distance: 400,
+//         duration: 2,
+//         opacity: 0.8,
+//         size: 40,
+//       },
+//       push: {
+//         quantity: 4,
+//       },
+//       repulse: {
+//         distance: 200,
+//         duration: 0.4,
+//       },
+//     },
+//   },
+//   particles: {
+//     color: {
+//       value: '#ffffff',
+//     },
+//     links: {
+//       color: '#ffffff',
+//       distance: 150,
+//       enable: true,
+//       opacity: 0.5,
+//       width: 1,
+//     },
+//     move: {
+//       direction: 'none',
+//       enable: true,
+//       outModes: 'bounce',
+//       random: false,
+//       speed: 6,
+//       straight: false,
+//     },
+//     number: {
+//       density: {
+//         enable: true,
+//       },
+//       value: 80,
+//     },
+//     opacity: {
+//       value: 0.5,
+//     },
+//     shape: {
+//       type: 'circle',
+//     },
+//     size: {
+//       value: { min: 1, max: 5 },
+//     },
+//   },
+//   detectRetina: true,
+// }
+
+// const configs = {
+//   particles: {
+//     number: {
+//       value: 80,
+//     },
+//     color: {
+//       value: [
+//         '#3998D0',
+//         '#2EB6AF',
+//         '#A9BD33',
+//         '#FEC73B',
+//         '#F89930',
+//         '#F45623',
+//         '#D62E32',
+//         '#EB586E',
+//         '#9952CF',
+//       ],
+//     },
+//     shape: {
+//       type: 'circle',
+//     },
+//     opacity: {
+//       value: 1,
+//     },
+//     size: {
+//       value: {
+//         min: 10,
+//         max: 15,
+//       },
+//     },
+//     collisions: {
+//       enable: true,
+//       mode: 'bounce',
+//     },
+//     move: {
+//       enable: true,
+//       speed: 3,
+//       outModes: 'bounce',
+//     },
+//   },
+//   interactivity: {
+//     events: {
+//       onClick: {
+//         enable: true,
+//         mode: 'pop',
+//       },
+//     },
+//   },
+//   background: {
+//     color: '#000000',
+//   },
+// }
+const configs = {
   particles: {
-    color: {
-      value: '#ffffff',
-    },
-    links: {
-      color: '#ffffff',
-      distance: 150,
-      enable: true,
-      opacity: 0.5,
-      width: 1,
-    },
-    move: {
-      direction: 'none',
-      enable: true,
-      outModes: 'bounce',
-      random: false,
-      speed: 6,
-      straight: false,
+    destroy: {
+      mode: 'split',
+      split: {
+        count: 1,
+        factor: {
+          value: {
+            min: 2,
+            max: 4,
+          },
+        },
+        rate: {
+          value: 100,
+        },
+        particles: {
+          life: {
+            count: 1,
+            duration: {
+              value: {
+                min: 2,
+                max: 3,
+              },
+            },
+          },
+          move: {
+            speed: {
+              min: 10,
+              max: 15,
+            },
+          },
+        },
+      },
     },
     number: {
-      density: {
-        enable: true,
-      },
       value: 80,
     },
-    opacity: {
-      value: 0.5,
+    color: {
+      value: [
+        '#3998D0',
+        '#2EB6AF',
+        '#A9BD33',
+        '#FEC73B',
+        '#F89930',
+        '#F45623',
+        '#D62E32',
+        '#EB586E',
+        '#9952CF',
+      ],
     },
     shape: {
       type: 'circle',
     },
+    opacity: {
+      value: 1,
+    },
     size: {
-      value: { min: 1, max: 5 },
+      value: {
+        min: 10,
+        max: 15,
+      },
+    },
+    collisions: {
+      enable: true,
+      mode: 'bounce',
+    },
+    move: {
+      enable: true,
+      speed: 3,
+      outModes: 'bounce',
     },
   },
-  detectRetina: true,
+  interactivity: {
+    events: {
+      onClick: {
+        enable: true,
+        mode: 'pop',
+      },
+    },
+  },
+  background: {
+    color: '#000000',
+  },
 }
 </script>
 

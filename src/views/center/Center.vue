@@ -1,10 +1,13 @@
 <template>
   <div>
-    <el-page-header
-      content="个人中心"
-      icon=""
-      title="企业门户网站管理系统"
-    ></el-page-header>
+    <el-card
+      ><el-page-header
+        content="个人中心"
+        icon=""
+        title="企业门户网站管理系统"
+      ></el-page-header
+    ></el-card>
+
     <el-row :gutter="20" class="el-row">
       <el-col :span="8">
         <el-card class="box-card">
@@ -25,7 +28,7 @@
             style="max-width: 600px"
             :model="userForm"
             :rules="userFormRules"
-            label-width="auto"
+            label-width="120px"
             class="demo-ruleForm"
             status-icon
           >
@@ -52,7 +55,7 @@
               />
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="submitForm">提交修改</el-button>
+              <el-button type="primary" @click="submitForm">添加用户</el-button>
             </el-form-item>
           </el-form>
         </el-card>
