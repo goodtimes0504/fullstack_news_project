@@ -1,10 +1,11 @@
 <template>
   <div>
     <el-card>
+      <!-- 去掉 icon="" 就有返回图标按钮了  -->
       <el-page-header
-        content="创建新闻"
-        icon=""
+        content="编辑新闻"
         title="新闻管理"
+        @back="handleBack"
       ></el-page-header>
     </el-card>
     <el-card class="box-card">
@@ -21,7 +22,10 @@
           <el-input v-model="newsForm.title" />
         </el-form-item>
         <el-form-item label="新闻内容" prop="content">
-          <editor @update:valueHtml="handleHTMLChange" />
+          <editor
+            @update:valueHtml="handleHTMLChange"
+            :content="newsForm.content"
+          />
         </el-form-item>
         <el-form-item label="类别" prop="category">
           <el-select v-model="newsForm.category" placeholder="Select">
@@ -40,7 +44,7 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm">添加新闻</el-button>
+          <el-button type="primary" @click="submitForm">提交修改</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -48,17 +52,23 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import Editor from '@/components/editor/Editor'
 import Upload from '@/components/upload/Upload'
-import { addNewsApi } from '@/api/newsApi'
+import { updateNewsApi } from '@/api/newsApi'
 import { ElLoading, ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
+import { getNewsDetailApi } from '@/api/newsApi'
+// import route from 'vue-router'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 const router = useRouter()
 
 const newsFormRef = ref(null)
 const newsForm = ref({
+  _id: '',
   title: '',
   content: '',
   category: 1, //分类 1是最新动态 2是典型案例 3是通知公告
@@ -88,7 +98,7 @@ const options = [
 ]
 //每次editor内容改变的回调函数
 const handleHTMLChange = newHTML => {
-  // console.log(newHTML)
+  //   console.log(newHTML)
   newsForm.value.content = newHTML
 }
 //新闻图片变动时的回调函数
@@ -100,8 +110,8 @@ const handleChange = cover => {
 const submitForm = () => {
   newsFormRef.value.validate(async valid => {
     if (valid) {
-      // console.log(newsForm.value)
-      //TODO 发送请求到后台保存新闻数据
+      //   console.log(newsForm.value)
+      //TODO 发送请求到后台保存修改后的新闻数据
       handleSubmit()
     } else {
       return false
@@ -128,7 +138,7 @@ const handleSubmit = async () => {
     for (let i in newsForm.value) {
       params.append(i, newsForm.value[i])
     }
-    const result = await addNewsApi(params)
+    const result = await updateNewsApi(params)
     // console.log(result)
     if (result.data.code === '1') {
       ElMessage({
@@ -161,6 +171,24 @@ const handleSubmit = async () => {
     isSubmitting.value = false
   }
 }
+const handleBack = () => {
+  router.back()
+}
+//取当前页面数据
+onMounted(async () => {
+  //   console.log(route.params.id)
+  const result = await getNewsDetailApi(route.params.id)
+  //   console.log(result) result.data.data是新闻数据
+  if (result.data.code === '1') {
+    newsForm.value = result.data.data
+    console.log(newsForm.value)
+  } else {
+    ElMessage({
+      message: result.data.message || '获取数据失败，请重试',
+      type: 'error',
+    })
+  }
+})
 </script>
 
 <style lang="scss" scoped>

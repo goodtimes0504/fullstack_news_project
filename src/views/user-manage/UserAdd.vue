@@ -141,7 +141,7 @@ const handleSubmit = async () => {
     } else {
       // 失败提示
       ElMessage({
-        message: result.data.message || '修改失败，请重试',
+        message: result.data.message || '提交失败，请重试',
         type: 'error',
       })
     }

@@ -43,6 +43,14 @@ import { loginApi } from '@/api/userApi'
 import { useUserStore } from '@/store/user'
 // import { authRoutes } from '@/router/config.js'
 import { addAuthRoutes } from '@/router/index.js'
+import { loadFull } from 'tsparticles'
+
+const particlesInit = async engine => {
+  await loadFull(engine)
+}
+const particlesLoaded = async container => {
+  console.log('Particles container loaded', container)
+}
 
 const userStore = useUserStore()
 const loading = ref(false)

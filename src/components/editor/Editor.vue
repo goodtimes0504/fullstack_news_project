@@ -22,12 +22,25 @@
 import '@wangeditor/editor/dist/css/style.css'
 
 // 从 Vue 框架导入必要的函数和响应式 API
-import { defineEmits, onBeforeUnmount, ref, shallowRef, onMounted } from 'vue'
+import {
+  defineEmits,
+  onBeforeUnmount,
+  ref,
+  shallowRef,
+  onMounted,
+  watch,
+} from 'vue'
 // 从 @wangeditor/editor-for-vue 包中导入 Editor 和 Toolbar 组件
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 
 // 使用 defineEmits 定义要触发的自定义事件名称，这里用于和 v-model 配合实现双向绑定及向父组件传递数据
 const emits = defineEmits(['update:valueHtml'])
+const props = defineProps({
+  content: {
+    type: String,
+    default: '',
+  },
+})
 
 // 编辑器实例，使用 shallowRef 创建较浅层次的响应式引用
 const editorRef = shallowRef()
@@ -37,10 +50,20 @@ const valueHtml = ref('<p>hello</p>')
 
 // 模拟 ajax 异步获取内容，在组件挂载后通过 setTimeout 模拟延迟更新内容
 onMounted(() => {
-  setTimeout(() => {
-    valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>'
-  }, 1500)
+  // setTimeout(() => {
+  //   valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>'
+  // }, 1500)
+  // props.content && (valueHtml.value = props.content)
+  //如果要用上面的方法生效的话 外面Editor组件要加v-if 等接口传值回来之后才渲染Editor组件，不然content就是空的 会先渲染Editor组件 内容为空
 })
+// 使用watch来监听props.content的变化，当变化时更新valueHtml的值
+watch(
+  () => props.content,
+  newContent => {
+    valueHtml.value = newContent
+    // console.log('watch', newContent)
+  }
+)
 
 // 工具栏配置对象，目前为空，可按需添加配置项
 const toolbarConfig = {}
