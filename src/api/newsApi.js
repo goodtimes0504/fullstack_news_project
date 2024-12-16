@@ -1,4 +1,6 @@
 import axiosInstance from '../utils/axios.config.js';
+
+
 export const addNewsApi = (data) => {
     return axiosInstance.post('/adminapi/news/add', data, {
         headers: {
@@ -13,7 +15,8 @@ export const getNewsListApi = () => {
 export const updateNewsStatusApi = (item) => {
     return axiosInstance.put('/adminapi/news/publish', {
         _id: item._id,
-        isPublish: item.isPublish
+        isPublish: item.isPublish,
+        author: item.author
     })
 }
 export const deleteNewsApi = (item) => {

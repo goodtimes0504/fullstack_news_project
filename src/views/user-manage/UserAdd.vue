@@ -138,6 +138,12 @@ const handleSubmit = async () => {
       setTimeout(() => {
         router.push('/user-manage/userlist')
       }, 1000)
+    } else if (result.data.code === 11000) {
+      ElMessage({
+        message: '用户名已存在',
+        type: 'error',
+        duration: 2000,
+      })
     } else {
       // 失败提示
       ElMessage({

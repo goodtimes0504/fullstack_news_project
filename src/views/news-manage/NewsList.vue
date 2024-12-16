@@ -8,7 +8,7 @@
       ></el-page-header>
     </el-card>
     <el-card class="box-card">
-      <el-table :data="tableData" style="width: 100%">
+      <el-table :data="tableData" style="width: 100%" v-if="!isEmpty">
         <el-table-column
           prop="title"
           label="新闻标题"
@@ -77,6 +77,7 @@
           </template>
         </el-table-column>
       </el-table>
+      <div class="empty" v-else>目前，您名下没有文章/新闻</div>
     </el-card>
     <el-dialog v-model="dialogVisible" title="预览新闻" width="60%">
       <div class="preview">
@@ -108,7 +109,7 @@ import { StarFilled, Edit, Delete, View } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 const router = useRouter()
-
+const isEmpty = ref(false)
 const tableData = ref([])
 const previewData = ref({})
 const dialogVisible = ref(false)
@@ -116,6 +117,9 @@ onMounted(async () => {
   const res = await getNewsListApi()
   // console.log(res.data)
   tableData.value = res.data.data
+  if (res.data.data.length === 0) {
+    isEmpty.value = true
+  }
   // //动态创建路由
   // router.addRoute('mainbox', {
   //   path: '/news-manage/editnews/:id',
@@ -137,9 +141,22 @@ const categoryFormat = category => {
 }
 // 发布状态的切换
 const handleSwitch = async item => {
-  await updateNewsStatusApi(item)
-  const result = await getNewsListApi()
-  tableData.value = result.data.data
+  const res = await updateNewsStatusApi(item)
+  if (res.data.code === '1') {
+    ElMessage({
+      type: 'success',
+      message: '修改成功!',
+      duration: 1000,
+    })
+    const result = await getNewsListApi()
+    tableData.value = result.data.data
+  } else {
+    ElMessage({
+      type: 'error',
+      message: res.data.message,
+      duration: 1000,
+    })
+  }
 }
 //预览回调函数
 const handlePreview = item => {
@@ -148,14 +165,22 @@ const handlePreview = item => {
 }
 //删除新闻回调函数
 const DelNews = async item => {
-  await deleteNewsApi(item)
-  const result = await getNewsListApi()
-  tableData.value = result.data.data
-  ElMessage({
-    type: 'success',
-    message: '删除成功!',
-    duration: 1000,
-  })
+  const res = await deleteNewsApi(item)
+  if (res.data.code === '1') {
+    const result = await getNewsListApi()
+    tableData.value = result.data.data
+    ElMessage({
+      type: 'success',
+      message: '删除成功!',
+      duration: 1000,
+    })
+  } else {
+    ElMessage({
+      type: 'error',
+      message: res.data.message,
+      duration: 1000,
+    })
+  }
 }
 //编辑回调函数
 const editNews = item => {

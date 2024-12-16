@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import Editor from '@/components/editor/Editor'
 import Upload from '@/components/upload/Upload'
 import { addNewsApi } from '@/api/newsApi'
@@ -65,6 +65,10 @@ const newsForm = ref({
   cover: '', //封面图片 URL.createObjectURL(file.raw) file.raw是原始的未经处理的文件文件相关数据 file是经过处理的 添加了各种属性的文件对象比如name size type等
   file: null, //图片对应的文件对象
   isPublish: 0, //是否发布 0未发布 1已发布 发布了才能在前台官网显示
+  author: '', //作者
+})
+onMounted(() => {
+  newsForm.value.author = localStorage.getItem('username')
 })
 const newsFormRules = ref({
   title: [{ required: true, message: '请输入新闻标题', trigger: 'blur' }],
