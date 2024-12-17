@@ -2,8 +2,8 @@
   <div>
     <el-card>
       <el-page-header
-        content="添加产品"
-        icon=""
+        content="编辑产品"
+        @back="handleBack"
         title="产品管理"
       ></el-page-header>
     </el-card>
@@ -34,7 +34,7 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm">添加产品</el-button>
+          <el-button type="primary" @click="submitForm">编辑产品</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -42,9 +42,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import Upload from '@/components/upload/Upload'
-import { addProductApi } from '@/api/productApi'
+import {
+  addProductApi,
+  getProductDetailApi,
+  updateProductApi,
+} from '@/api/productApi'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElLoading } from 'element-plus'
 
@@ -87,8 +91,24 @@ const productFormRules = ref({
     },
   ],
 })
+const handleBack = () => {
+  router.back()
+}
+onMounted(async () => {
+  const productId = router.currentRoute.value.params.id
+  //   console.log(productId)
+  // 根据产品ID获取产品详情
+  const result = await getProductDetailApi(productId)
+  if (result.data.code === '1') {
+    productForm.value = result.data.data
+  } else {
+    ElMessage({
+      message: result.data.message || '获取数据失败，请重试',
+      type: 'error',
+    })
+  }
+})
 
-//头像变动时的回调函数
 const handleChange = cover => {
   productForm.value.cover = URL.createObjectURL(cover)
   productForm.value.file = cover
@@ -99,7 +119,6 @@ const submitForm = () => {
   productFormRef.value.validate(valid => {
     if (valid) {
       handleSubmit()
-      console.log(productForm.value)
     } else {
       return
     }
@@ -125,7 +144,7 @@ const handleSubmit = async () => {
     for (let i in productForm.value) {
       params.append(i, productForm.value[i])
     }
-    const result = await addProductApi(params)
+    const result = await updateProductApi(params)
     console.log(result)
     if (result.data.code === '1') {
       ElMessage({
@@ -137,12 +156,6 @@ const handleSubmit = async () => {
       setTimeout(() => {
         router.push('/product-manage/productlist')
       }, 1000)
-    } else if (result.data.code === 11000) {
-      ElMessage({
-        message: '用户名已存在',
-        type: 'error',
-        duration: 2000,
-      })
     } else {
       // 失败提示
       ElMessage({

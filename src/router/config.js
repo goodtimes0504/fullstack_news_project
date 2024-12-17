@@ -8,6 +8,7 @@ import UserAdd from "@/views/user-manage/UserAdd.vue";
 import UserList from "@/views/user-manage/UserList.vue";
 import NotFound from "@/views/notfound/NotFound.vue";
 import NewsEdit from "@/views/news-manage/NewsEdit.vue";
+import ProductEdit from "@/views/product-manage/ProductEdit.vue";
 
 //基础路由表，不需要权限
 export const constantRoutes = [
@@ -55,6 +56,11 @@ export const constantRoutes = [
         path: "/product-manage/productlist",
         name: "productlist",
         component: ProductList,
+    },
+    {
+        path: "/product-manage/editproduct/:id",
+        name: "editproduct",
+        component: ProductEdit,
     },
     {
         path: "/:pathMatch(.*)*",

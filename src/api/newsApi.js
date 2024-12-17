@@ -20,7 +20,7 @@ export const updateNewsStatusApi = (item) => {
     })
 }
 export const deleteNewsApi = (item) => {
-    return axiosInstance.delete(`/adminapi/news/delete/${item._id}`,)
+    return axiosInstance.delete(`/adminapi/news/delete/${item._id}`)
 }
 export const getNewsDetailApi = (id) => {
     return axiosInstance.get(`/adminapi/news/detail/${id}`)

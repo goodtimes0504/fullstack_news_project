@@ -26,9 +26,22 @@
           <span>公司产品</span>
         </div>
       </template>
-      <el-carousel :interval="4000" type="card" height="200px">
-        <el-carousel-item v-for="item in 6" :key="item">
-          <h3 text="2xl" justify="center">{{ item }}</h3>
+      <el-carousel
+        :interval="4000"
+        type="card"
+        height="500px"
+        v-if="loopList.length"
+      >
+        <el-carousel-item
+          v-for="item in loopList"
+          :key="item._id"
+          class="carousel-item"
+        >
+          <div class="carousel-item-container">
+            <!-- <img :src="'http://localhost:3000' + item.cover" alt="图片描述" /> -->
+            <img :src="`http://localhost:3000${item.cover}`" />
+            <h3 text="2xl" justify="center">{{ item.title }}</h3>
+          </div>
         </el-carousel-item>
       </el-carousel>
     </el-card>
@@ -36,10 +49,11 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useUserStore } from '@/store/user'
-import { computed } from 'vue'
+import { getProductListApi } from '@/api/productApi'
 const userStore = useUserStore()
+const loopList = ref([])
 const avatarUrl = computed(() => {
   if (userStore.userInfo?.avatar) {
     return 'http://localhost:3000' + userStore.userInfo?.avatar
@@ -57,8 +71,12 @@ const welcomeText = computed(() => {
   }
 })
 
-onMounted(() => {
-  // console.log(userStore.userInfo)
+onMounted(async () => {
+  const res = await getProductListApi()
+  // console.log(res.data)
+  // tableData.value = res.data.data
+  loopList.value = res.data.data
+  console.log(loopList.value)
 })
 </script>
 
@@ -67,7 +85,8 @@ onMounted(() => {
   margin-top: 15px;
 }
 .el-carousel__item h3 {
-  color: #475669;
+  position: absolute;
+  color: #fff;
   opacity: 0.75;
   line-height: 200px;
   margin: 0;
@@ -81,4 +100,20 @@ onMounted(() => {
 .el-carousel__item:nth-child(2n + 1) {
   background-color: #d3dce6;
 }
+.carousel-item-container {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 500px;
+}
+.carousel-item-container :deep(img) {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+// :deep(.carousel-item) {
+//   height: 500px;
+// }
 </style>
