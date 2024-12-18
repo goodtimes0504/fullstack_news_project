@@ -20,7 +20,7 @@
             <div v-if="scope.row.avatar">
               <el-avatar
                 :size="50"
-                :src="'http://localhost:3000' + scope.row.avatar"
+                :src="process.env.VUE_APP_BASE_URL + scope.row.avatar"
               ></el-avatar>
             </div>
             <div v-else>

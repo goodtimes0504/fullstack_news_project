@@ -75,7 +75,7 @@ const userFormRef = ref({})
 const userStore = useUserStore()
 const avatarUrl = computed(() => {
   if (userStore.userInfo?.avatar) {
-    return 'http://localhost:3000' + userStore.userInfo?.avatar
+    return process.env.VUE_APP_BASE_URL + userStore.userInfo?.avatar
   } else
     return 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
 })

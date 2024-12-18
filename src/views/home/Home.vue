@@ -38,8 +38,7 @@
           class="carousel-item"
         >
           <div class="carousel-item-container">
-            <!-- <img :src="'http://localhost:3000' + item.cover" alt="图片描述" /> -->
-            <img :src="`http://localhost:3000${item.cover}`" />
+            <img :src="`${baseURL + item.cover}`" />
             <h3 text="2xl" justify="center">{{ item.title }}</h3>
           </div>
         </el-carousel-item>
@@ -54,9 +53,10 @@ import { useUserStore } from '@/store/user'
 import { getProductListApi } from '@/api/productApi'
 const userStore = useUserStore()
 const loopList = ref([])
+const baseURL = process.env.VUE_APP_BASE_URL
 const avatarUrl = computed(() => {
   if (userStore.userInfo?.avatar) {
-    return 'http://localhost:3000' + userStore.userInfo?.avatar
+    return process.env.VUE_APP_BASE_URL + userStore.userInfo?.avatar
   } else
     return 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
 })
@@ -72,9 +72,9 @@ const welcomeText = computed(() => {
 })
 
 onMounted(async () => {
+  console.log(process.env.VUE_APP_BASE_URL)
   const res = await getProductListApi()
-  // console.log(res.data)
-  // tableData.value = res.data.data
+
   loopList.value = res.data.data
   console.log(loopList.value)
 })

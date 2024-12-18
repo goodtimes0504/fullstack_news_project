@@ -104,19 +104,19 @@ const handleLogin = async () => {
       type: 'success',
     })
     loading.value = true
-    // console.log(result.data.data.role, typeof result.data.data.role)
-    if (result.data.data.role === 1) {
-      addAuthRoutes()
-      console.log(
-        result.data.data.role,
-        typeof result.data.data.role,
-        '添加成功',
-        router.getRoutes()
-      )
-      // await removeAuthRoutes() //移除不需要的路由
-      // console.log('移除不需要的路由 ')
-      // // await addAuthRoutes() //添加需要的路由
-    }
+
+    // if (result.data?.data?.role === 1) {
+    //   addAuthRoutes()
+    //   // console.log(
+    //   //   result.data.data.role,
+    //   //   typeof result.data.data.role,
+    //   //   '添加成功',
+    //   //   router.getRoutes()
+    //   // )
+    //   // await removeAuthRoutes() //移除不需要的路由
+    //   // console.log('移除不需要的路由 ')
+    //   // // await addAuthRoutes() //添加需要的路由
+    // }
     // setTimeout(() => {
     //   router.push(redirect)
     // }, 1000)

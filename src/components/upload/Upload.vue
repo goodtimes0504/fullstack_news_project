@@ -27,7 +27,7 @@ const uploadAvatarUrl = computed(() => {
   if (props.avatar.includes('blob:')) {
     return props.avatar
   } else {
-    return 'http://localhost:3000' + props.avatar
+    return process.env.VUE_APP_BASE_URL + props.avatar
   }
 })
 //每次选择完头像的回调函数

@@ -22,7 +22,7 @@ const routes = [
     name: "mainbox",
     component: MainBox,
     redirect: "/index",
-    children: localStorage.getItem('userInfo').role === 1 ? constantRoutes : allRoutes
+    children: localStorage.getItem('userInfo')?.role === 1 ? constantRoutes : allRoutes
     // 直接添加所有子路由
   },
 
